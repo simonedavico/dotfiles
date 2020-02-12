@@ -1,9 +1,23 @@
 # Makes homebrew git win over OS X git. Revert to line above if it
 # causes problems
 export PATH=/usr/local/bin:$HOME/bin:$PATH
+export PATH="/usr/local/opt/curl/bin:$PATH"
+# add helm 2.8.2
+export PATH="~/helm:$PATH"
+# add up to date ruby from brew
+export PATH="/usr/local/opt/ruby/bin:$PATH"
+# add jetbrains CLI scripts
+export PATH="/Users/sdavico/jetbrains_scripts:$PATH"
 
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/sdavico/.oh-my-zsh
+
+# Kubernetes clusters config
+export KUBECONFIG=~/.kube/config:~/.kube/rancher-config:~/.kube/welld-config
+export SPACESHIP_KUBECONTEXT_NAMESPACE_SHOW=true
+
+# corner related stuff
+export LOKALISE_API_TOKEN=<nope>
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -53,11 +67,15 @@ export ANDROID_HOME=~/Library/Android/sdk
 export PATH=${PATH}:${ANDROID_HOME}/tools
 export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 
+# GraalVM
+export GRAALVM_HOME=$HOME/.sdkman/candidates/java/19.2.1-grl
+export PATH=${PATH}:${GRAALVM_HOME}/bin
+
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions)
+plugins=(git zsh-autosuggestions kubectl docker-compose)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -89,47 +107,63 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias retimg="gulp dev --deployPath=/Users/sdavico/Development/retim-qts-munic/retim-war/target/retim/retim/"
+alias retimg="gulp dev --deployPath=/Users/sdavico/Development/retim-trunk/retim-war/target/retim/retim/"
+
+# Cleanup local git branches. Explanation:
+# git branch -vv: show local branches with info about remote
+# grep ': gone]': match gone branches
+# grep -v "\*": fetch only lines not containing an asterisk (current branch)
+# awk '{print $1}': extracts local branch name
+# xargs -r git branch -D: delete local branches (also not fully merged, downgrade to -d to avoid)
+alias gbclean="git branch -vv | grep ': gone]' | grep -v \"\*\" | awk '{print $1}' | gxargs -r git branch -D"
+
+# use bat as a better cat
+alias cat=bat
+
+# handy command to run a busybox pod on k8s
+alias kubesh="kubectl run -i --rm --tty busybox --image=busybox --restart=Never -- sh"
 
 # Quick launch pixel 2 AVD 
 avd() {
-  AVD_NAME=${1-Pixel_2_API_26_Oreo_}
+  AVD_NAME=${1-Pixel_2_XL_API_P}
   echo "about to launch avd $AVD_NAME"
   ~/Library/Android/sdk/emulator/emulator -avd $AVD_NAME -dns-server 8.8.8.8,8.8.4.4 &
   echo "avd started"  
   sleep 30; echo "Running avd in background, about to sync date..." && adb shell su root date $(date +%m%d%H%M%Y.%S)  
 }
 
-export NVM_DIR="/Users/sdavico/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
-
-export PATH="/usr/local/opt/curl/bin:$PATH"
-export TERM=xterm-256color
-
-# Calling nvm use automatically in a directory with a .nvmrc file
-autoload -U add-zsh-hook
-load-nvmrc() {
-  local node_version="$(nvm version)"
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$node_version" ]; then
-      nvm use
-    fi
-  elif [ "$node_version" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
-  fi
-}
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
-
 # z script
 . /usr/local/etc/profile.d/z.sh
 
+if [[ $ITERM_SESSION_ID ]]; then
+  # Display the current git repo, or directory, in iterm tabs.
+  get_iterm_label() {
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+      local directory
+      directory=${PWD##*/}
+      echo -ne "\\033];$directory\\007"
+    else
+      local branch
+      local branchdir
+      branchdir=$(basename "$(git rev-parse --show-toplevel)")
+      branch=$(git branch 2>/dev/null | grep -e '\* ' | sed "s/^..\(.*\)/{\1}/")
+      echo -ne "\\033];$branchdir $branch\\007"
+    fi
+  }
+  export PROMPT_COMMAND=get_iterm_label;"${PROMPT_COMMAND}"
+fi
+
+export TERM=xterm-256color
 source "/Users/sdavico/.oh-my-zsh/custom/themes/spaceship.zsh-theme"
+source "/usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+#load fastlane lane names autocomplete
+. ~/.fastlane/completions/completion.sh
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/sdavico/.sdkman"
+[[ -s "/Users/sdavico/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/sdavico/.sdkman/bin/sdkman-init.sh"
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+# fnm
+eval "$(fnm env --multi)"
