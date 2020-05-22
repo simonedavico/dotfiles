@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block, everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # Makes homebrew git win over OS X git. Revert to line above if it
 # causes problems
 export PATH=/usr/local/bin:$HOME/bin:$PATH
@@ -13,8 +20,9 @@ export PATH="/Users/sdavico/jetbrains_scripts:$PATH"
 export ZSH=/Users/sdavico/.oh-my-zsh
 
 # Kubernetes clusters config
-export KUBECONFIG=~/.kube/config:~/.kube/rancher-config:~/.kube/welld-config
-export SPACESHIP_KUBECONTEXT_NAMESPACE_SHOW=true
+export KUBECONFIG=~/.kube/config
+export KUBE_EDITOR="code -w"
+# export SPACESHIP_KUBECONTEXT_NAMESPACE_SHOW=true
 
 # corner related stuff
 export LOKALISE_API_TOKEN=<nope>
@@ -22,7 +30,8 @@ export LOKALISE_API_TOKEN=<nope>
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="spaceship"
+# ZSH_THEME="spaceship"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -122,6 +131,7 @@ alias cat=bat
 
 # handy command to run a busybox pod on k8s
 alias kubesh="kubectl run -i --rm --tty busybox --image=busybox --restart=Never -- sh"
+alias mongopod="kubectl run -i --rm --tty busybox --image=mongoclient/mongoclient --restart=Never -- sh"
 
 # Quick launch pixel 2 AVD 
 avd() {
@@ -154,16 +164,27 @@ if [[ $ITERM_SESSION_ID ]]; then
 fi
 
 export TERM=xterm-256color
-source "/Users/sdavico/.oh-my-zsh/custom/themes/spaceship.zsh-theme"
+# source "/Users/sdavico/.oh-my-zsh/custom/themes/spaceship.zsh-theme"
 source "/usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 #load fastlane lane names autocomplete
-. ~/.fastlane/completions/completion.sh
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="/Users/sdavico/.sdkman"
-[[ -s "/Users/sdavico/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/sdavico/.sdkman/bin/sdkman-init.sh"
+# . ~/.fastlane/completions/completion.sh
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 # fnm
 eval "$(fnm env --multi)"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/sdavico/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/sdavico/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/sdavico/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/sdavico/google-cloud-sdk/completion.zsh.inc'; fi
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=8,bold,underline"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/sdavico/.sdkman"
+[[ -s "/Users/sdavico/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/sdavico/.sdkman/bin/sdkman-init.sh"
