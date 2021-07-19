@@ -7,14 +7,13 @@ fi
 
 # Makes homebrew git win over OS X git. Revert to line above if it
 # causes problems
-export PATH=/usr/local/bin:$HOME/bin:$PATH
-export PATH="/usr/local/opt/curl/bin:$PATH"
-# add helm 2.8.2
-export PATH="~/helm:$PATH"
-# add up to date ruby from brew
-export PATH="/usr/local/opt/ruby/bin:$PATH"
-# add jetbrains CLI scripts
-export PATH="/Users/sdavico/jetbrains_scripts:$PATH"
+HOMEBREW=/usr/local/bin
+PSQL=/usr/local/opt/libpq/bin
+PYTHON_BINS=/Users/sdavico/Library/Python/3.9/bin
+FNM=/Users/sdavico/.fnm
+
+# YARN="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin"
+export PATH=$FNM:$HOMEBREW:$HOME/bin:$PSQL:$PYTHON_BINS:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/sdavico/.oh-my-zsh
@@ -22,15 +21,10 @@ export ZSH=/Users/sdavico/.oh-my-zsh
 # Kubernetes clusters config
 export KUBECONFIG=~/.kube/config
 export KUBE_EDITOR="code -w"
-# export SPACESHIP_KUBECONTEXT_NAMESPACE_SHOW=true
-
-# corner related stuff
-export LOKALISE_API_TOKEN=<nope>
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-# ZSH_THEME="spaceship"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Uncomment the following line to use case-sensitive completion.
@@ -73,18 +67,15 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Android SDK
 export ANDROID_HOME=~/Library/Android/sdk
+export PATH=${PATH}:${ANDROID_HOME}/emulator
 export PATH=${PATH}:${ANDROID_HOME}/tools
 export PATH=${PATH}:${ANDROID_HOME}/platform-tools
-
-# GraalVM
-export GRAALVM_HOME=$HOME/.sdkman/candidates/java/19.2.1-grl
-export PATH=${PATH}:${GRAALVM_HOME}/bin
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions kubectl docker-compose)
+plugins=(git zsh-autosuggestions kubectl docker-compose zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -116,7 +107,6 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias retimg="gulp dev --deployPath=/Users/sdavico/Development/retim-trunk/retim-war/target/retim/retim/"
 
 # Cleanup local git branches. Explanation:
 # git branch -vv: show local branches with info about remote
@@ -133,9 +123,13 @@ alias cat=bat
 alias kubesh="kubectl run -i --rm --tty busybox --image=busybox --restart=Never -- sh"
 alias mongopod="kubectl run -i --rm --tty busybox --image=mongoclient/mongoclient --restart=Never -- sh"
 
+# force python to use homebrew
+alias pip=$(brew --prefix)/bin/pip3.8
+alias python=$(brew --prefix)/bin/python3.8
+
 # Quick launch pixel 2 AVD 
 avd() {
-  AVD_NAME=${1-Pixel_2_XL_API_P}
+  AVD_NAME=${1-Pixel_3a_API_30_x86}
   echo "about to launch avd $AVD_NAME"
   ~/Library/Android/sdk/emulator/emulator -avd $AVD_NAME -dns-server 8.8.8.8,8.8.4.4 &
   echo "avd started"  
@@ -164,15 +158,6 @@ if [[ $ITERM_SESSION_ID ]]; then
 fi
 
 export TERM=xterm-256color
-# source "/Users/sdavico/.oh-my-zsh/custom/themes/spaceship.zsh-theme"
-source "/usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-
-#load fastlane lane names autocomplete
-# . ~/.fastlane/completions/completion.sh
-
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-# fnm
-eval "$(fnm env --multi)"
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/sdavico/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/sdavico/google-cloud-sdk/path.zsh.inc'; fi
@@ -180,8 +165,20 @@ if [ -f '/Users/sdavico/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/sdavico
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/sdavico/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/sdavico/google-cloud-sdk/completion.zsh.inc'; fi
 
+# ruby-build installs a non-Homebrew OpenSSL for each Ruby version installed and these are never upgraded.
+# To link Rubies to Homebrew's OpenSSL 1.1 (which is upgraded) add the following
+# to your ~/.zshrc:
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
+
+# setup rbenv
+eval "$(rbenv init -)"
+eval "`fnm env`"
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Elixir version manager
+. /usr/local/opt/asdf/asdf.sh
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=8,bold,underline"
 
