@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 add_or_update_asdf_plugin() {
   local name="$1"
@@ -105,9 +105,6 @@ curl -L http://install.ohmyz.sh | sh
 echo "Setting up Zsh plugins..."
 cd ~/.oh-my-zsh/custom/plugins
 git clone git://github.com/zsh-users/zsh-syntax-highlighting.git
-
-echo "Setting Zsh as shell..."
-chsh -s /bin/zsh
 
 # Apps
 apps=(
@@ -303,3 +300,4 @@ echo "* Complete yabai installation (instructions at https://github.com/koekeish
 echo "* Enable reduced motion in macOS Accessibility settings \n"
 echo "* Setup JetBrains apps from the Toolbox \n"
 echo "* Install the JVM via sdkman \n"
+echo "* Upgrade zsh: `brew install zsh`, add to `/etc/shells`, then run `chsh -s $(which zsh)`"
