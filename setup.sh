@@ -106,6 +106,33 @@ echo "Setting up Zsh plugins..."
 cd ~/.oh-my-zsh/custom/plugins
 git clone git://github.com/zsh-users/zsh-syntax-highlighting.git
 
+echo "Installing powerline10k for oh-my-zsh..."
+
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+echo "Creating development directory..."
+
+mkdir -p ~/Development
+
+echo "Cloning dotfiles repository..."
+
+pushd ~/Development
+
+git clone git@github.com:simonedavico/dotfiles.git
+
+echo "Symlinking dotfiles..."
+
+ln -sf ~/Development/dotfiles/.zshrc ~/.zshrc
+ln -sf ~/Development/dotfiles/.p10k.zsh ~/.p10k.zsh
+ln -sf ~/Development/yabai/.yabairc ~/.yabairc
+ln -sf ~/Development/yabai/scripts ~/.yabai/scripts
+ln -sf ~/Development/yabai/.config/karabiner ~/.config/karabiner
+ln -sf ~/Development/yabai/.config/skhd ~/.config/skhd
+
+chmod +x ~/.yabai/scripts/*.sh
+
+popd
+
 # Apps
 apps=(
   alfred
