@@ -1,3 +1,27 @@
+#!/bin/zsh
+
+add_or_update_asdf_plugin() {
+  local name="$1"
+  local url="$2"
+
+  if ! asdf plugin-list | grep -Fq "$name"; then
+    asdf plugin-add "$name" "$url"
+  else
+    asdf plugin-update "$name"
+  fi
+}
+
+install_asdf_language() {
+  local language="$1"
+  local version
+  version="$(asdf list-all "$language" | grep -v "[a-z]" | tail -1)"
+
+  if ! asdf list "$language" | grep -Fq "$version"; then
+    asdf install "$language" "$version"
+    asdf global "$language" "$version"
+  fi
+}
+
 echo "Creating an SSH key for you..."
 ssh-keygen -t rsa
 
@@ -12,7 +36,7 @@ xcode-select --install
 # Install if we don't have it
 if test ! $(which brew); then
   echo "Installing homebrew..."
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  /bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
 # Update homebrew recipes
@@ -45,6 +69,7 @@ packages=(
   kubectx
   kubernetes-cli
   mas
+  openssl
   sdkman
   skhd
   stern
@@ -60,14 +85,18 @@ brew install ${packages[@]}
 echo "Cleaning up brew..."
 brew cleanup
 
-echo "Installing fonts..."
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/simonedavico/dotfiles/master/fonts.sh)"
+echo "Setting up asdf plugins..."
 
-# echo "Copying dotfiles from Github"
-# cd ~
-# git clone git@github.com:bradp/dotfiles.git .dotfiles
-# cd .dotfiles
-# sh symdotfiles
+add_or_update_asdf_plugin "erlang" "https://github.com/asdf-vm/asdf-erlang.git"
+add_or_update_asdf_plugin "elixir" "https://github.com/asdf-vm/asdf-elixir.git"
+
+echo "Setting up Erlang and Elixir..."
+
+install_asdf_language "erlang"
+install_asdf_language "elixir"
+
+echo "Installing fonts..."
+/bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/simonedavico/dotfiles/master/fonts.sh)"
 
 #Install Zsh & Oh My Zsh
 echo "Installing Oh My Zsh..."
@@ -274,4 +303,3 @@ echo "* Complete yabai installation (instructions at https://github.com/koekeish
 echo "* Enable reduced motion in macOS Accessibility settings \n"
 echo "* Setup JetBrains apps from the Toolbox \n"
 echo "* Install the JVM via sdkman \n"
-echo "* Install the Elixir/Erlang plugins for asdf and install OPT and Elixir \n"

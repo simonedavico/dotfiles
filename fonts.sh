@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 pushd /tmp
 
 echo 'Downloading Fira Code distribution from Nerd Fonts...'
