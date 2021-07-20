@@ -4,7 +4,7 @@ pushd /tmp
 
 echo 'Downloading Fira Code distribution from Nerd Fonts...'
 
-wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
+curl https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip --output FiraCode.zip
 
 echo 'Cleaning up unneeded font files...'
 
