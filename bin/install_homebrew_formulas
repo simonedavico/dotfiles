@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+printf "This script will:\n"
+printf "  * install tools from Homebrew;\n"
+
+read -p "Press [Enter] key after this..."
+
+# Check for Homebrew,
+# Install if we don't have it
+if test ! $(which brew); then
+  printf "Installing homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+printf "Installing tools from Homebrew..."
+
+packages=(
+  bat
+  cloc
+  exercism
+  jq
+  kubectx
+  kubernetes-cli
+  mas
+  openssl
+  skhd
+  stern
+  tree
+  watch
+  watchman
+  yabai
+  z
+)
+
+brew install ${packages[@]}
+
+printf "Cleaning up brew..."
+brew cleanup

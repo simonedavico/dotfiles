@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+printf "This script will:\n"
+printf "  * install xcode CLI tools;\n"
+printf "  * install Homebrew;\n"
+printf "  * install fnm and Node.js;\n"
+
+read -p "Press [Enter] key after this..."
+
+xcode-select -p 1>/dev/null;
+
+if [ $? == 2 ]; then
+  printf "Installing XCode CLI utils..."
+  xcode-select --install
+fi
+
+# Check for Homebrew,
+# Install if we don't have it
+if test ! $(which brew); then
+  printf "Installing homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+if test ! $(which fnm); then
+  printf "Installing fnm and Node.js..."
+  brew install fnm
+  fnm install --lts
+  fnm eval
+fi

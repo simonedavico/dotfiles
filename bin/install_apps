@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+printf "This script will:\n"
+printf "  * install apps from Homebrew Cask.\n"
+printf "  * install App Store exclusive apps with mas.\n"
+
+read -p "Press [Enter] key after this..."
+
+# Check for Homebrew,
+# Install if we don't have it
+if test ! $(which brew); then
+  printf "Installing homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+printf "Installing apps from Homebrew Cask..."
+
+apps=(
+  alfred
+  discord
+  docker
+  firefox
+  google-chrome
+  iterm2
+  jetbrains-toolbox
+  keeweb
+  maccy
+  qlmarkdown
+  qlstephen
+  spotify
+  suspicious-package
+  tableplus
+  transmission
+  vlc
+)
+
+brew install --cask ${apps[@]}
+brew cleanup
+
+printf "Installing apps from App Store with mas..."
+
+mas_apps=(
+  937984704 # Amphetamine 
+  409203825 # Numbers
+  409183694 # Keynote
+)
+
+mas install ${mas_apps[@]}

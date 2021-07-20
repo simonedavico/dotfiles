@@ -1,179 +1,15 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
-add_or_update_asdf_plugin() {
-  local name="$1"
-  local url="$2"
+set -o nounset
+set -o errexit
+set -o pipefail
 
-  if ! asdf plugin-list | grep -Fq "$name"; then
-    asdf plugin-add "$name" "$url"
-  else
-    asdf plugin-update "$name"
-  fi
-}
+printf "This script will:\n"
+printf "  * setup a bunch of macOS settings;\n"
 
-install_asdf_language() {
-  local language="$1"
-  local version
-  version="$(asdf list-all "$language" | grep -v "[a-z]" | tail -1)"
-
-  if ! asdf list "$language" | grep -Fq "$version"; then
-    asdf install "$language" "$version"
-    asdf global "$language" "$version"
-  fi
-}
-
-echo "Creating an SSH key for you..."
-ssh-keygen -t rsa
-
-echo "Please add this public key to Github \n"
-echo "https://github.com/account/ssh \n"
 read -p "Press [Enter] key after this..."
 
-echo "Installing XCode CLI utils..."
-xcode-select --install
-
-# Check for Homebrew,
-# Install if we don't have it
-if test ! $(which brew); then
-  echo "Installing homebrew..."
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
-
-# Update homebrew recipes
-echo "Updating homebrew..."
-brew update
-
-echo "Installing Git..."
-brew install git
-
-echo "Setting up Git..."
-
-git config --global user.name "Simone D'Avico"
-git config --global user.email $1
-
-if test ! $(which fnm); then
-  echo "Installing Node.js..."
-  brew install fnm
-  fnm install --lts
-  fnm eval
-fi
-
-echo "Installing other brew stuff..."
-
-packages=(
-  asdf
-  bat
-  cloc
-  exercism
-  jq
-  kubectx
-  kubernetes-cli
-  mas
-  openssl
-  sdkman
-  skhd
-  stern
-  tree
-  watch
-  watchman
-  yabai
-  z
-)
-
-brew install ${packages[@]}
-
-echo "Cleaning up brew..."
-brew cleanup
-
-echo "Setting up asdf plugins..."
-
-add_or_update_asdf_plugin "erlang" "https://github.com/asdf-vm/asdf-erlang.git"
-add_or_update_asdf_plugin "elixir" "https://github.com/asdf-vm/asdf-elixir.git"
-
-echo "Setting up Erlang and Elixir..."
-
-install_asdf_language "erlang"
-install_asdf_language "elixir"
-
-echo "Installing fonts..."
-/bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/simonedavico/dotfiles/master/fonts.sh)"
-
-#Install Zsh & Oh My Zsh
-echo "Installing Oh My Zsh..."
-curl -L http://install.ohmyz.sh | sh
-
-echo "Setting up Zsh plugins..."
-cd ~/.oh-my-zsh/custom/plugins
-git clone git://github.com/zsh-users/zsh-syntax-highlighting.git
-
-echo "Installing powerline10k for oh-my-zsh..."
-
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-
-echo "Creating development directory..."
-
-mkdir -p ~/Development
-
-echo "Cloning dotfiles repository..."
-
-pushd ~/Development
-
-git clone git@github.com:simonedavico/dotfiles.git
-
-echo "Symlinking dotfiles..."
-
-ln -sf ~/Development/dotfiles/.zshrc ~/.zshrc
-ln -sf ~/Development/dotfiles/.p10k.zsh ~/.p10k.zsh
-ln -sf ~/Development/yabai/.yabairc ~/.yabairc
-ln -sf ~/Development/yabai/scripts ~/.yabai/scripts
-ln -sf ~/Development/yabai/.config/karabiner ~/.config/karabiner
-ln -sf ~/Development/yabai/.config/skhd ~/.config/skhd
-
-chmod +x ~/.yabai/scripts/*.sh
-
-popd
-
-# Apps
-apps=(
-  alfred
-  discord
-  docker
-  firefox
-  google-chrome
-  iterm2
-  jetbrains-toolbox
-  keeweb
-  maccy
-  qlmarkdown
-  qlstephen
-  spotify
-  suspicious-package
-  tableplus
-  transmission
-  vlc
-)
-
-# Install apps to /Applications
-# Default is: /Users/$user/Applications
-echo "Installing apps with Cask..."
-brew install --cask ${apps[@]}
-
-brew cask alfred link
-
-brew cask cleanup
-brew cleanup
-
-echo "Installing apps from App Store with mas"
-
-mas_apps=(
-  937984704 # Amphetamine 
-  409203825 # Numbers
-  409183694 # Keynote
-)
-
-mas install ${mas_apps[@]}
-
-echo "Setting some Mac settings..."
+printf "Setting some Mac settings..."
 
 #"Disabling system-wide resume"
 defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -bool false
@@ -319,12 +155,6 @@ defaults write org.m0k.transmission WarningLegal -bool false
 # Don’t automatically rearrange Spaces based on most recent use
 defaults write com.apple.dock mru-spaces -bool false
 
-killall Finder
+printf "Restarting Finder..."
 
-echo "All packages installed! A few manual steps required: \n"
-echo "* Restore dotfiles \n"
-echo "* Complete yabai installation (instructions at https://github.com/koekeishiya/yabai/wiki) \n"
-echo "* Enable reduced motion in macOS Accessibility settings \n"
-echo "* Setup JetBrains apps from the Toolbox \n"
-echo "* Install the JVM via sdkman \n"
-echo "* Upgrade zsh: `brew install zsh`, add to `/etc/shells`, then run `chsh -s $(which zsh)`"
+killall Finder

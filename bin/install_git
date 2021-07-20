@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+printf "This script will:\n"
+printf "  * upgrade git from Homebrew;\n"
+printf "  * generate a new SSH key;\n"
+printf "  * setup git configs;\n"
+
+read -p "Press [Enter] key after this..."
+
+# Check for Homebrew,
+# Install if we don't have it
+if test ! $(which brew); then
+  printf "Installing homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+printf "Installing Git..."
+brew install git
+
+printf "Configuring Git..."
+
+git config --global user.name "Simone D'Avico"
+git config --global user.email "simonedavico@gmail.com"
+
+printf "Creating an SSH key for you..."
+ssh-keygen -t rsa
+
+printf "Please add this public key to Github \n"
+printf "https://github.com/account/ssh \n"

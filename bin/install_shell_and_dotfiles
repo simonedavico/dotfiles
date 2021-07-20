@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+printf "This script will:\n"
+printf "  * install development fonts.\n"
+printf "  * install oh-my-zsh + plugins.\n"
+printf "  * install powerline10k.\n"
+printf "  * create ~/Development directory.\n"
+printf "  * download and symlink dotfiles.\n"
+
+read -p "Press [Enter] key after this..."
+
+printf "Installing fonts..."
+
+pushd /tmp
+
+printf 'Downloading Fira Code distribution from Nerd Fonts...'
+
+curl -LO https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
+
+printf 'Cleaning up unneeded font files...'
+
+unzip FiraCode.zip -d FiraCode/
+rm -f FiraCode/*Windows*
+rm -f FiraCode/*.ttf
+
+printf 'Installing Fira Code...'
+
+mkdir -p $HOME/Library/Fonts
+cp FiraCode/*.otf $HOME/Library/Fonts/
+
+printf 'Fira Code installed, cleaning up...'
+
+rm -rf FiraCode/ FiraCode.zip
+
+popd
+
+printf "Installing Oh My Zsh..."
+curl -L http://install.ohmyz.sh | sh
+
+printf "Setting up Zsh plugins..."
+pushd ~/.oh-my-zsh/custom/plugins
+
+if [ ! -d ./zsh-syntax-highlighting ]; then
+  printf "Installing syntax highlighting plugin..."
+  git clone --depth=1 git://github.com/zsh-users/zsh-syntax-highlighting.git
+fi
+
+popd
+
+if [ ! -d ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k ]; then
+  printf "Installing powerline10k for oh-my-zsh..."
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+fi
+
+printf "Creating development directory..."
+
+mkdir -p ~/Development
+
+printf "Cloning dotfiles repository..."
+
+pushd ~/Development
+
+if [ ! -d ~/Development/dotfiles ]; then
+  git clone git@github.com:simonedavico/dotfiles.git
+fi
+
+printf "Symlinking dotfiles..."
+
+ln -sf ~/Development/dotfiles/.zshrc ~/.zshrc
+ln -sf ~/Development/dotfiles/.p10k.zsh ~/.p10k.zsh
+ln -sf ~/Development/yabai/.yabairc ~/.yabairc
+ln -sf ~/Development/yabai/scripts ~/.yabai/scripts
+ln -sf ~/Development/yabai/.config/karabiner ~/.config/karabiner
+ln -sf ~/Development/yabai/.config/skhd ~/.config/skhd
+
+chmod +x ~/.yabai/scripts/*.sh
+
+popd

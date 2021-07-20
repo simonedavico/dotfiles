@@ -1,26 +1,16 @@
 # dotfiles
 
+Simple scripts to automate most of the setup for a new macOS installation.
+The scripts are idempotent and can be run safely more than once.
 ## Install
 
-Download the script:
+* Clone the repository;
+* Make `run.sh` and scripts in `lib/` executables;
+* Run `run.sh`: 
 
 ```sh
-curl --remote-name https://raw.githubusercontent.com/simonedavico/dotfiles/master/setup.sh
+./run.sh 2>&1 | tee ~/setup.log
 ```
-
-Review the script (avoid running scripts you haven't read!):
-
-```sh
-less mac
-```
-
-Execute the downloaded script:
-
-```sh
-sh mac 2>&1 <email_address> | tee ~/setup.log
-```
-
-**N.B:** `email_address` will be configured as email address for the `git` client.
 
 Optionally, review the log:
 
@@ -30,4 +20,10 @@ less ~/setup.log
 
 ## What it sets up
 
-TODO: write this down
+* Basics: XCode CLI utils, Homebrew, `fnm` and Node.js;
+* Git: update git with latest from Homebrew, setup git config, generate an SSH key;
+* Tools: a bunch of tools via Homebrew;
+* Apps: a bunch of apps via Homebrew Cask and `mas`;
+* Erlang/Elixir: `erlang` and `Elixir` installs via `asdf`;
+* Shell: setup `oh-my-zsh` with `powerline10k` theme and Fira Code Mono; setup `skhd` and `yabai`;
+* Settings: set a bunch of useful macOS settings.
