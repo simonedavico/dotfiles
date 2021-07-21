@@ -28,14 +28,14 @@ while true; do
   if [[ $# == 0 ]]; then
     printf "\nUsage: run OPTION\n"
     printf "Install:\n"
-    printf "  b:  Install basics.\n"
-    printf "  g:  Install git and create SSH keys.\n"
-    printf "  f:  Install Homebrew Formulas.\n"
-    printf "  a:  Install apps.\n"
-    printf "  s:  Install shell and dotfiles.\n"
-    printf "  e:  Install erlang and Elixir.\n"
-    printf "  x:  Setup macOS settings.\n"
-    printf "  q:  Quit/Exit.\n\n"
+    printf "  [b]  Basics: brew, fnm, node \n"
+    printf "  [g]  Install git and generate an SSH key for GitHub.\n"
+    printf "  [f]  Homebrew Formulas.\n"
+    printf "  [a]  Apps.\n"
+    printf "  [s]  Shell and dotfiles.\n"
+    printf "  [e]  erlang and Elixir.\n"
+    printf "  [x]  Setup macOS settings.\n"
+    printf "  [q]  Quit/Exit.\n\n"
     read -p "Enter selection: " response
     printf "\n"
     process_option $response
