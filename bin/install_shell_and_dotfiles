@@ -11,7 +11,7 @@ printf "  * install powerline10k.\n"
 printf "  * create ~/Development directory.\n"
 printf "  * download and symlink dotfiles.\n"
 
-read -p "Press [Enter] key after this..."
+read -pr "Press [Enter] key after this..."
 
 printf "Installing fonts..."
 
@@ -29,8 +29,8 @@ rm -f FiraCode/*.ttf
 
 printf 'Installing Fira Code...'
 
-mkdir -p $HOME/Library/Fonts
-cp FiraCode/*.otf $HOME/Library/Fonts/
+mkdir -p "$HOME"/Library/Fonts
+cp FiraCode/*.otf "$HOME"/Library/Fonts/
 
 printf 'Fira Code installed, cleaning up...'
 
@@ -51,9 +51,9 @@ fi
 
 popd
 
-if [ ! -d ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k ]; then
+if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/themes/powerlevel10k ]; then
   printf "Installing powerline10k for oh-my-zsh..."
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/themes/powerlevel10k
 fi
 
 printf "Creating development directory..."
@@ -62,10 +62,8 @@ mkdir -p ~/Development
 
 printf "Cloning dotfiles repository..."
 
-pushd ~/Development
-
 if [ ! -d ~/Development/dotfiles ]; then
-  git clone git@github.com:simonedavico/dotfiles.git
+  git clone git@github.com:simonedavico/dotfiles.git ~/Development/dotfiles
 fi
 
 printf "Symlinking dotfiles..."
@@ -78,5 +76,3 @@ ln -sf ~/Development/yabai/.config/karabiner ~/.config/karabiner
 ln -sf ~/Development/yabai/.config/skhd ~/.config/skhd
 
 chmod +x ~/.yabai/scripts/*.sh
-
-popd

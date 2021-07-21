@@ -8,11 +8,11 @@ printf "This script will:\n"
 printf "  * install apps from Homebrew Cask.\n"
 printf "  * install App Store exclusive apps with mas.\n"
 
-read -p "Press [Enter] key after this..."
+read -pr "Press [Enter] key after this..."
 
 # Check for Homebrew,
 # Install if we don't have it
-if test ! $(which brew); then
+if test ! "$(which brew)"; then
   printf "Installing homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
@@ -38,7 +38,7 @@ apps=(
   vlc
 )
 
-brew install --cask ${apps[@]}
+brew install --cask "${apps[@]}"
 brew cleanup
 
 printf "Installing apps from App Store with mas..."
@@ -49,4 +49,4 @@ mas_apps=(
   409183694 # Keynote
 )
 
-mas install ${mas_apps[@]}
+mas install "${mas_apps[@]}"

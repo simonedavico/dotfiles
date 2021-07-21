@@ -7,11 +7,11 @@ set -o pipefail
 printf "This script will:\n"
 printf "  * install tools from Homebrew;\n"
 
-read -p "Press [Enter] key after this..."
+read -pr "Press [Enter] key after this..."
 
 # Check for Homebrew,
 # Install if we don't have it
-if test ! $(which brew); then
+if test ! "$(which brew)"; then
   printf "Installing homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
@@ -36,7 +36,7 @@ packages=(
   z
 )
 
-brew install ${packages[@]}
+brew install "${packages[@]}"
 
 printf "Cleaning up brew..."
 brew cleanup

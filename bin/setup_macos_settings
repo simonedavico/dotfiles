@@ -7,7 +7,7 @@ set -o pipefail
 printf "This script will:\n"
 printf "  * setup a bunch of macOS settings;\n"
 
-read -p "Press [Enter] key after this..."
+read -pr "Press [Enter] key after this..."
 
 printf "Setting some Mac settings..."
 
