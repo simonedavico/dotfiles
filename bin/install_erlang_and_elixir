@@ -40,6 +40,11 @@ fi
 printf "Installing asdf..."
 
 brew install asdf
+brew install autoconf
+brew install openssl
+
+# for wxwidgets (observer GUI)
+brew install wxmac
 
 printf "Setting up asdf plugins..."
 
