@@ -7,9 +7,12 @@ set -o pipefail
 printf "This script will:\n"
 printf "  * setup a bunch of macOS settings;\n"
 
-read -pr "Press [Enter] key after this..."
+read -p "Press [Enter] key after this..."
 
 printf "Setting some Mac settings..."
+
+#"Enable dark mode"
+defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 
 #"Disabling system-wide resume"
 defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -bool false

@@ -11,7 +11,7 @@ printf "  * install powerline10k.\n"
 printf "  * create ~/Development directory.\n"
 printf "  * download and symlink dotfiles.\n"
 
-read -pr "Press [Enter] key after this..."
+read -p "Press [Enter] key after this..."
 
 printf "Installing fonts..."
 
@@ -38,18 +38,20 @@ rm -rf FiraCode/ FiraCode.zip
 
 popd
 
-printf "Installing Oh My Zsh..."
-curl -L http://install.ohmyz.sh | sh
+if [ ! -d ~/.oh-my-zsh ]; then
+  printf "Installing Oh My Zsh..."
+  curl -L http://install.ohmyz.sh | sh
 
-printf "Setting up Zsh plugins..."
-pushd ~/.oh-my-zsh/custom/plugins
+  printf "Setting up Zsh plugins..."
+  pushd ~/.oh-my-zsh/custom/plugins
 
-if [ ! -d ./zsh-syntax-highlighting ]; then
-  printf "Installing syntax highlighting plugin..."
-  git clone --depth=1 git://github.com/zsh-users/zsh-syntax-highlighting.git
+  if [ ! -d ./zsh-syntax-highlighting ]; then
+    printf "Installing syntax highlighting plugin..."
+    git clone --depth=1 git://github.com/zsh-users/zsh-syntax-highlighting.git
+  fi
+
+  popd
 fi
-
-popd
 
 if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/themes/powerlevel10k ]; then
   printf "Installing powerline10k for oh-my-zsh..."
@@ -71,7 +73,11 @@ printf "Symlinking dotfiles..."
 ln -sf ~/Development/dotfiles/.zshrc ~/.zshrc
 ln -sf ~/Development/dotfiles/.p10k.zsh ~/.p10k.zsh
 ln -sf ~/Development/yabai/.yabairc ~/.yabairc
+
+mkdir -p ~/.yabai/scripts
 ln -sf ~/Development/yabai/scripts ~/.yabai/scripts
+
+mkdir -p ~/.config
 ln -sf ~/Development/yabai/.config/karabiner ~/.config/karabiner
 ln -sf ~/Development/yabai/.config/skhd ~/.config/skhd
 

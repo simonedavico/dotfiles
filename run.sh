@@ -36,7 +36,7 @@ while true; do
     printf "  [e]  erlang and Elixir.\n"
     printf "  [x]  Setup macOS settings.\n"
     printf "  [q]  Quit/Exit.\n\n"
-    read -pr "Enter selection: " response
+    read -p "Enter selection: " response
     printf "\n"
     process_option "$response"
   else

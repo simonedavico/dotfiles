@@ -9,7 +9,7 @@ printf "  * upgrade git from Homebrew;\n"
 printf "  * generate a new SSH key;\n"
 printf "  * setup git configs;\n"
 
-read -pr "Press [Enter] key after this..."
+read -p "Press [Enter] key after this..."
 
 # Check for Homebrew,
 # Install if we don't have it

@@ -8,7 +8,7 @@ printf "This script will:\n"
 printf "  * install apps from Homebrew Cask.\n"
 printf "  * install App Store exclusive apps with mas.\n"
 
-read -pr "Press [Enter] key after this..."
+read -p "Press [Enter] key after this..."
 
 # Check for Homebrew,
 # Install if we don't have it
@@ -24,7 +24,7 @@ apps=(
   discord
   docker
   firefox
-  google-chrome
+#  google-chrome
   iterm2
   jetbrains-toolbox
   keeweb

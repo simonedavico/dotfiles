@@ -9,14 +9,16 @@ printf "  * install xcode CLI tools;\n"
 printf "  * install Homebrew;\n"
 printf "  * install fnm and Node.js;\n"
 
-read -pr "Press [Enter] key after this..."
+read -p "Press [Enter] key after this..."
 
-xcode-select -p 1>/dev/null;
+#xcode-select -p 1>/dev/null;
 
-if [ $? == 2 ]; then
-  printf "Installing XCode CLI utils..."
-  xcode-select --install
-fi
+#if [ $? == 2 ]; then
+
+#fi
+
+printf "Installing XCode CLI utils..."
+xcode-select --install
 
 # Check for Homebrew,
 # Install if we don't have it
@@ -29,5 +31,6 @@ if test ! "$(which fnm)"; then
   printf "Installing fnm and Node.js..."
   brew install fnm
   fnm install --lts
-  fnm eval
+  eval "$(fnm env)"
+  ln -s $(which node) /usr/local/bin/node
 fi

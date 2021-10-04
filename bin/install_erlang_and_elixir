@@ -30,7 +30,7 @@ printf "This script will:\n"
 printf "  * install asdf;\n"
 printf "  * install erlang and Elixir;\n"
 
-read -pr "Press [Enter] key after this..."
+read -p "Press [Enter] key after this..."
 
 if test ! "$(which brew)"; then
   printf "Installing homebrew..."

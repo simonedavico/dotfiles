@@ -9,17 +9,17 @@ fi
 # causes problems
 HOMEBREW=/usr/local/bin
 PSQL=/usr/local/opt/libpq/bin
-PYTHON_BINS=/Users/sdavico/Library/Python/3.9/bin
-FNM=/Users/sdavico/.fnm
+PYTHON_BINS=/Users/simone.davico/Library/Python/3.9/bin
+FNM=/Users/simone.davico/.fnm
 
 # YARN="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin"
 export PATH=$FNM:$HOMEBREW:$HOME/bin:$PSQL:$PYTHON_BINS:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/sdavico/.oh-my-zsh
+export ZSH=/Users/simone.davico/.oh-my-zsh
 
 # Kubernetes clusters config
-export KUBECONFIG=~/.kube/config
+export KUBECONFIG=~/.kube/casavo
 export KUBE_EDITOR="code -w"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
@@ -136,6 +136,11 @@ avd() {
   sleep 30; echo "Running avd in background, about to sync date..." && adb shell su root date $(date +%m%d%H%M%Y.%S)  
 }
 
+# load .env file automatically
+sorce () {
+  set -a && source $@ && set +a
+}
+
 # z script
 . /usr/local/etc/profile.d/z.sh
 
@@ -160,10 +165,10 @@ fi
 export TERM=xterm-256color
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/sdavico/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/sdavico/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/Users/simone.davico/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/simone.davico/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/sdavico/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/sdavico/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/Users/simone.davico/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/simone.davico/google-cloud-sdk/completion.zsh.inc'; fi
 
 # ruby-build installs a non-Homebrew OpenSSL for each Ruby version installed and these are never upgraded.
 # To link Rubies to Homebrew's OpenSSL 1.1 (which is upgraded) add the following
@@ -171,17 +176,22 @@ if [ -f '/Users/sdavico/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/s
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 
 # setup rbenv
-eval "$(rbenv init -)"
+# eval "$(rbenv init -)"
 eval "`fnm env`"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Elixir version manager
-. /usr/local/opt/asdf/asdf.sh
+. /usr/local/opt/asdf/libexec/asdf.sh
+
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=8,bold,underline"
 
+# Add Jbang to environment
+alias j!=jbang
+export PATH="$HOME/.jbang/bin:$PATH"
+
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="/Users/sdavico/.sdkman"
-[[ -s "/Users/sdavico/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/sdavico/.sdkman/bin/sdkman-init.sh"
+export SDKMAN_DIR="/Users/simone.davico/.sdkman"
+[[ -s "/Users/simone.davico/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/simone.davico/.sdkman/bin/sdkman-init.sh"
