@@ -34,6 +34,7 @@ packages=(
   watchman
   yabai
   z
+  mycli
 )
 
 brew install "${packages[@]}"

@@ -36,6 +36,8 @@ apps=(
   tableplus
   transmission
   vlc
+  rectangle
+  visual-studio-code
 )
 
 brew install --cask "${apps[@]}"

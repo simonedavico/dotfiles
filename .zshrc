@@ -175,9 +175,8 @@ if [ -f '/Users/simone.davico/google-cloud-sdk/completion.zsh.inc' ]; then . '/U
 # to your ~/.zshrc:
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 
-# setup rbenv
-# eval "$(rbenv init -)"
-eval "`fnm env`"
+# setup fnm
+eval "$(fnm env --use-on-cd)"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
