@@ -39,6 +39,7 @@ apps=(
   rectangle
   visual-studio-code
   slack
+  tunnelblick
 )
 
 # FIXME: this is not idempotent
