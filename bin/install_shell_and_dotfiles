@@ -41,17 +41,22 @@ popd
 if [ ! -d ~/.oh-my-zsh ]; then
   printf "Installing Oh My Zsh..."
   curl -L http://install.ohmyz.sh | sh
-
-  printf "Setting up Zsh plugins..."
-  pushd ~/.oh-my-zsh/custom/plugins
-
-  if [ ! -d ./zsh-syntax-highlighting ]; then
-    printf "Installing syntax highlighting plugin..."
-    git clone --depth=1 git://github.com/zsh-users/zsh-syntax-highlighting.git
-  fi
-
-  popd
 fi
+
+printf "Setting up Zsh plugins..."
+pushd ~/.oh-my-zsh/custom/plugins
+
+if [ ! -d ./zsh-syntax-highlighting ]; then
+  printf "Installing syntax highlighting plugin..."
+  git clone --depth=1 git://github.com/zsh-users/zsh-syntax-highlighting.git
+fi
+
+if [ ! -d ./zsh-autosuggestions ]; then
+  printf "Installing autosuggestions plugin..."
+  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git
+fi
+
+popd
 
 if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/themes/powerlevel10k ]; then
   printf "Installing powerline10k for oh-my-zsh..."

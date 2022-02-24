@@ -24,7 +24,7 @@ apps=(
   discord
   docker
   firefox
-#  google-chrome
+  google-chrome
   iterm2
   jetbrains-toolbox
   keeweb
@@ -38,8 +38,11 @@ apps=(
   vlc
   rectangle
   visual-studio-code
+  slack
 )
 
+# FIXME: this is not idempotent
+# maybe switch to brew bundle?
 brew install --cask "${apps[@]}"
 brew cleanup
 

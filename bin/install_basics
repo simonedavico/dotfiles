@@ -13,12 +13,15 @@ read -p "Press [Enter] key after this..."
 
 #xcode-select -p 1>/dev/null;
 
-#if [ $? == 2 ]; then
+xcode-select -p 1>/dev/null;
 
-#fi
+if [ $? == 2 ]; then
+  printf "Installing XCode CLI utils..."
+  xcode-select --install
+else
+  printf "XCode CLI already installed, skipping..."
+fi
 
-printf "Installing XCode CLI utils..."
-xcode-select --install
 
 # Check for Homebrew,
 # Install if we don't have it
