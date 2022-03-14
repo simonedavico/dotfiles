@@ -35,6 +35,7 @@ packages=(
   yabai
   z
   mycli
+  libpq
 )
 
 brew install "${packages[@]}"
