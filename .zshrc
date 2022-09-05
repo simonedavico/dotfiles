@@ -21,6 +21,7 @@ export ZSH=/Users/simone.davico/.oh-my-zsh
 # Kubernetes clusters config
 export KUBECONFIG=~/.kube/casavo
 export KUBE_EDITOR="code -w"
+export ELIXIR_EDITOR="code --goto __FILE__:__LINE__"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
